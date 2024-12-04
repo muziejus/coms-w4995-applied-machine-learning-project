@@ -40,7 +40,7 @@ from dotenv import load_dotenv
 from fredapi import Fred
 
 
-def save_external_indicators(start_date, end_date):
+def get_external_indicators(start_date, end_date, date_range):
     load_dotenv()
 
     api_key = os.getenv("FRED_API_KEY")
@@ -57,9 +57,6 @@ def save_external_indicators(start_date, end_date):
         "SP500",
     ]
 
-    # Create a date range
-    date_range = pd.date_range(start_date, end_date, freq="D")
-
     # Create an empty dataframe with the date range as index
     df = pd.DataFrame(index=date_range)
 
@@ -73,6 +70,23 @@ def save_external_indicators(start_date, end_date):
     # Some indicators are monthly and some are quarterly
     # Fill the NaN with the last valid value
     df = df.ffill()
+
+    # Rename columns
+    new_column_names = {
+        "CPIAUCSL": "cpi",
+        "PCE": "pce",
+        "PPIACO": "ppi",
+        "ECIALLCIV": "eci",
+        "GDPDEF": "gdp",
+        "UNRATE": "unemployment",
+        "MCUMFN": "manufacturing",
+        "SP500": "sp500",
+    }
+    df = df.rename(columns=new_column_names)
+
     path = "data/financial_data/external_indicators.csv"
-    df.to_csv(path, index_label="Date")
+    df.to_csv(path, index_label="date")
     print(f"External indicators saved to {path}")
+
+    # Use the date as the index for merging
+    return df
