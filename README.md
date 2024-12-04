@@ -1,42 +1,52 @@
-# COMS-W4995 Applied Machine Learning Project
+# Using Sentiment Analysis to Forecast Share Prices
 
-## Repo Structure
+Ruibin Lyu, Vi Mai, Julie Meunier, Tuba Opel, Moacir P. de Sá Pereira
 
-The `data/` directory includes preliminary data we downloaded from outside sources.
+Throughout we have used ticker symbols to refer to companies:
 
-## Assignment Info
+Symbol | Company
+-------|--------
+DLTR   | Dollar Tree
+LULU   | Lululemon
+ULTA   | Ulta
+WBA    | Walgreens
+WMT    | Walmart
 
-The project assignment gives students an opportunity to apply different aspects of Machine Learning covered in the classroom to a real-world application.
-Through this project, students will get hands-on experience solving a Machine Learning problem including data analysis, 
-visualization and applying machine learning models to develop actionable insights.
-The project will have three deliverables that are required to be submitted by the team throughout the course term.
-The students are randomly assigned to groups sized 4-6 and would be allowed one submission per group. 
+## File Structure
 
-The deliverables are also milestones in the repo.
+- /
+    - report.pdf - This is our final report describing the project.
+    - data/ - We separated our data into financial data and sentiment data.
+        - financial_data/
+            dltr.csv - DLTR historical data
+            lulu.csv - LULU historical data
+            ulta.csv - ULTA historical data
+            wba.csv - WBA historical data
+            wmt.csv - WMT historical data
+            external_indicators.csv - External financial indicators
+            merged_financial_data.csv - The above files merged together
+        - sentiment_data/
+            dltr_sent.parquet - DLTR sentiment analysis data
+            lulu_sent.parquet - LULU sentiment analysis data
+            ulta_sent.parquet - ULTA sentiment analysis data
+            wba_sent.parquet - WBA sentiment analysis data
+            wmt_sent.parquet - WMT sentiment analysis data
+        - dltr_merged_data.parquet - DLTR merged and aggregated data
+        - lulu_merged_data.parquet - LULU merged and aggregated data
+        - ulta_merged_data.parquet - ULTA merged and aggregated data
+        - wba_merged_data.parquet - WBA merged and aggregated data
+        - wmt_merged_data.parquet - WMT merged and aggregated data
+    - notebooks/ - We did the same with the code, as we split up into two teams.
+        - financial_code/
+            - external_indicators.ipynb - Gather external financial indicators
+            - company_data.ipynb - Gather company financial information
+            - merge_company_and_external_factors.ipynb - Merge the above together
+        - sentiment_code/
+            - prepare-texts.ipynb - 
+            - concatenate-corpora.ipynb - Combine articles and prepare for batch processing
+            - analyze-texts.ipynb - Execute sentiment analysis
+            - concatenate-analyses.ipynb - Combine data on sentiment analysis
 
-### Project Deliverable #1 - Project Proposal (due 10/17/2024)
+## Code Description and Workflow
 
-Submit a 1 page proposal that should include:
 
-1. Background and context to the problem statement. 
-1. Identification and description of the data set(s) you are planning on using  along with their source. Some popular data sources are provided below:
-    1. https://www.kaggle.com/ (Links to an external site.)
-    1. Publicly available data of  cities such as New York, Chicago, San Francisco, Washington DC etc.
-    1. Public datasets on Amazon https://registry.opendata.aws/ (Links to an external site.)
-    1. Public datasets on Google https://www.google.com/publicdata/directory (Links to an external site.)
-    1. OpenML datasets: https://www.openml.org/s/88/data (Links to an external site.)
-1. Proposed ML techniques you are proposing on applying to solve the problem
-
-### Project Deliverable #2 - Data Analysis and Visualization (due 11/14/2024)
-
-Submit a presentation with 8-10 slides with notes covering:
-
-1. Initial data exploration
-1. Cleaning and sampling
-1. Insights from data exploration and
-1. Machine Learning techniques proposed to be implemented
-
-### Project Deliverable #3 - Report & Code (due 12/05/2024) 
-
-Each team is expected to submit a 3-page final report that talks about their project in detail.
-The teams are also expected to submit their python code through the github classroom that would be shared later in the semester.
