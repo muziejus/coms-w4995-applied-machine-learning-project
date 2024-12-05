@@ -10,6 +10,7 @@ from external_indicators import get_external_indicators
 from share_prices import get_share_prices
 from sentiment import get_daily_sentiment
 from expand_financial_data import expand_financial_data
+from eda import eda
 
 companies = ["dltr", "lulu", "ulta", "wba", "wmt"]
 
@@ -61,15 +62,10 @@ def collect_data():
 
 
 # Exploratory Data Analysis
-def eda():
+def print_eda():
     # Load the data
-    for company in companies:
-        df = pd.read_parquet(f"data/{company}_merged_data.parquet")
-
-        # Exploratory Data Analysis
-        print(f"\n{company}")
-        print(df.info())
-        print(df.describe())
+    eda_df = eda(companies)
+    print(eda_df)
 
 
 # SVM Model
@@ -82,7 +78,7 @@ if __name__ == "__main__":
         if argument == "collect_data":
             collect_data()
         elif argument == "eda":
-            eda()
+            print_eda()
         else:
             print("Invalid argument. Please use 'collect_data'.")
     else:
