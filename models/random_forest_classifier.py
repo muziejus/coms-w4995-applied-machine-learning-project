@@ -32,7 +32,7 @@ def random_forest_classifier(company):
     # Add Index as a column for ordinal encoding of days
     df.insert(0, "Index", range(len(df)))
 
-    X_dev, X_test, y_dev, y_test = split_data(df)
+    X_dev, X_test, y_dev, y_test = split_data(df, business_days=True)
 
     clf = RandomForestClassifier(random_state=42)
 
@@ -53,10 +53,9 @@ def random_forest_classifier(company):
 
     # Evaluate Model
     print(f"Model Selection time: {elapsed_time} seconds")
-    print(f"Best F1 score:", model_grid_search.best_score_)
-    print(f"Best params:", model_grid_search.best_params_)
-    print(f"Test F1 score:", model_grid_search.score(X_test, y_test))
-    print()
+    print(f"Best F1 score: {model_grid_search.best_score_}")
+    print(f"Best params: {model_grid_search.best_params_}")
+    print(f"Test F1 score: {model_grid_search.score(X_test, y_test)}")
 
     tuned_model = model_grid_search.best_estimator_
     y_pred = tuned_model.predict(X_test)
