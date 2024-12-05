@@ -7,6 +7,8 @@ This function returns a pandas dataframe with the data from the parquet
 file for the target company.
 """
 
+import pandas as pd
+
 
 def load_data(company):
     return pd.read_parquet(f"data/{company}_merged_data.parquet")
