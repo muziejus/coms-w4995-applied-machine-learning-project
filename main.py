@@ -11,6 +11,7 @@ from share_prices import get_share_prices
 from sentiment import get_daily_sentiment
 from expand_financial_data import expand_financial_data
 from eda import eda
+from models.random_forest_classifier import random_forest_classifier
 
 companies = ["dltr", "lulu", "ulta", "wba", "wmt"]
 
@@ -71,6 +72,12 @@ def print_eda():
 # SVM Model
 
 
+# Random Forest model
+def random_forest():
+    for company in companies:
+        random_forest_classifier(company)
+
+
 if __name__ == "__main__":
     # Check if an argument is passed
     if len(sys.argv) > 1:
@@ -79,6 +86,8 @@ if __name__ == "__main__":
             collect_data()
         elif argument == "eda":
             print_eda()
+        elif argument == "random_forest":
+            random_forest()
         else:
             print("Invalid argument. Please use 'collect_data'.")
     else:
