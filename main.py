@@ -6,6 +6,8 @@ by Ruibin Lyu, Vi Mai, Julie Meunier, Tuba Opel, Moacir P. de Sá Pereira
 
 import sys
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 from external_indicators import get_external_indicators
 from share_prices import get_share_prices
 from sentiment import get_daily_sentiment
@@ -74,8 +76,71 @@ def print_eda():
 
 # Random Forest model
 def random_forest():
+    results = []
     for company in companies:
-        random_forest_classifier(company)
+        confusion_matrix_display, features, importances = random_forest_classifier(
+            company
+        )
+        results.append((company, confusion_matrix_display, features, importances))
+
+    # Plot using subplots
+    fig, axes = plt.subplots(2, 5, figsize=(14, 8), constrained_layout=True)
+    plt.tight_layout()
+
+    for i, (company, confusion_matrix_display, features, importances) in enumerate(
+        results
+    ):
+        confusion_matrix_display.plot(ax=axes[0, i])
+        confusion_matrix_display.ax_.set_title(
+            f"{company.upper()} Confusion Matrix", fontsize=12
+        )
+        confusion_matrix_display.im_.colorbar.remove()
+        confusion_matrix_display.ax_.set_xlabel("")
+        # cm_ax.set_title()
+        # cm_ax.set_xlabel("Predicted")
+        # cm_ax.set_ylabel("Actual")
+
+        # Feature Importance subplot (bottom row)
+        # sorted_feats_imps = sorted(zip(feats, imps), key=lambda x: x[1], reverse=True)
+        # top_feats, top_imps = zip(*sorted_feats_imps[:10])  # Show top 10 features
+        # wrapped_feats = ["\n".join(textwrap.wrap(f, width=15)) for f in top_feats]
+        ax = sns.barplot(y=list(importances), x=list(features), ax=axes[1, i])
+        # ax.set_titleax.tick_params(axis="x", rotation=45)  # Rotate x-axis labels by 45 degrees
+        ax.tick_params(axis="x", rotation=90)
+        ax.set_xticklabels(ax.get_xticklabels(), fontsize=10)
+        #     f"{company.upper()} Feature Selection Based on Random Forest Classification"
+        # )
+        ax.set_ylabel("Importance")
+        ax.set_xlabel("Features")
+
+    plt.suptitle(
+        "Confusion Matrices and Feature Importances for Companies", fontsize=16
+    )
+    plt.savefig(
+        "plots/random_forest/faceted_random_forest.png",
+        dpi=300,
+        bbox_inches="tight",
+    )
+
+
+# plt.savefig(
+#     f"plots/random_forest/{company}_confusion_matrix.png",
+#     dpi=300,
+#     bbox_inches="tight",
+# )
+# plt.figure(figsize=(12, 10))
+# plt.tight_layout()
+# ax = sns.barplot(x=list(imps), y=list(feats))
+# ax.set_title(
+#     f"{company.upper()} Feature Selection Based on Random Forest Classification"
+# )
+# ax.set_xlabel("Importance")
+# ax.set_ylabel("Features")
+# plt.savefig(
+#     f"plots/random_forest/{company}_feature_selection.png",
+#     dpi=300,
+#     bbox_inches="tight",
+# )
 
 
 if __name__ == "__main__":
