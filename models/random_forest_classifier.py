@@ -14,7 +14,7 @@ from utils.split_data import split_data
 import time
 
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.metrics import confusion_matrix, accuracy_score, f1_score
 from sklearn.model_selection import GridSearchCV
 
 
@@ -55,21 +55,24 @@ def random_forest_classifier(company):
 
     accuracy = accuracy_score(y_test, y_pred)
 
+    f1score = f1_score(y_test, y_pred)
+
     # Confusion
     cm = confusion_matrix(y_test, y_pred)
 
     # Feature Importance
-    feat_imps = zip(
-        X_dev.columns, model_grid_search.best_estimator_.feature_importances_
-    )
-    feats, imps = zip(
-        *(
-            sorted(
-                list(filter(lambda x: x[1] != 0, feat_imps)),
-                key=lambda x: x[1],
-                reverse=True,
-            )
-        )
-    )
+    # feat_imps = zip(
+    #     X_dev.columns, model_grid_search.best_estimator_.feature_importances_
+    # )
+    # feats, imps = zip(
+    #     *(
+    #         sorted(
+    #             list(filter(lambda x: x[1] != 0, feat_imps)),
+    #             key=lambda x: x[1],
+    #             reverse=True,
+    #         )
+    #     )
+    # )
 
-    return cm, feats, imps, accuracy
+    return cm, accuracy, f1score
+    # return cm, feats, imps, accuracy, f1score
