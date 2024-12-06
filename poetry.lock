@@ -1418,6 +1418,25 @@ pygments = ">=2.13.0,<3.0.0"
 jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
+name = "scikeras"
+version = "0.13.0"
+description = "Scikit-Learn API wrapper for Keras."
+optional = false
+python-versions = "<4,>=3.9.0"
+files = [
+    {file = "scikeras-0.13.0-py3-none-any.whl", hash = "sha256:beeec4536129e316f8ffa56b32cbc097fa9168f3789feb243cadb8d9a36a0084"},
+    {file = "scikeras-0.13.0.tar.gz", hash = "sha256:bfc720b2755f6c09981da13c9858e999a4bf775c49b0a296847dd1adad4c5d7d"},
+]
+
+[package.dependencies]
+keras = ">=3.2.0"
+scikit-learn = ">=1.4.2"
+
+[package.extras]
+tensorflow = ["tensorflow (>=2.16.1)"]
+test = ["tensorflow (>=2.16.1)"]
+
+[[package]]
 name = "scikit-learn"
 version = "1.5.2"
 description = "A set of python modules for machine learning and data mining"
@@ -1652,4 +1671,4 @@ repair = ["scipy (>=1.6.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "7dc7dcae327812bbd3ef84d52e63105ede5482b4123922d75dc2aefdae4a6108"
+content-hash = "22dc9d5a3f9d3891688acffbaa7b1802d1d2c00cb58b066ff09b59e9fcf6cb59"

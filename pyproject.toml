@@ -21,6 +21,7 @@ seaborn = "^0.13.2"
 matplotlib = "^3.9.3"
 scikit-learn = "^1.5.2"
 keras = "^3.7.0"
+scikeras = "^0.13.0"
 
 
 [build-system]
