@@ -4,7 +4,8 @@
 Tuba Opel
 
 This module trains a random forest classifier on each of our target
-companies.
+companies. It returns the data to make a confusion matrix and a
+feature importance plot.
 """
 
 from utils.load_data import load_data
@@ -52,7 +53,8 @@ def random_forest_classifier(company):
     elapsed_time = end_time - start_time
 
     # Evaluate Model
-    print(f"Model Selection time: {elapsed_time} seconds")
+
+    print(f"\n\n{company.upper()} model selection time: {elapsed_time} seconds")
     print(f"Best F1 score: {model_grid_search.best_score_}")
     print(f"Best params: {model_grid_search.best_params_}")
     print(f"Test F1 score: {model_grid_search.score(X_test, y_test)}")
@@ -68,9 +70,6 @@ def random_forest_classifier(company):
     disp = metrics.ConfusionMatrixDisplay(
         confusion_matrix=cm, display_labels=class_names
     )
-    disp.plot()
-    plt.title(f"{company.upper()} Confusion Matrix")
-    plt.show()
 
     # Feature Importance
     feat_imps = zip(
@@ -85,7 +84,5 @@ def random_forest_classifier(company):
             )
         )
     )
-    ax = sns.barplot(x=list(feats), y=list(imps))
-    ax.set_title(f"{company.upper()} Feature Selection Based on RFR")
-    ax.set_xlabel("Features")
-    ax.set_ylabel("Importance")
+
+    return disp, feats, imps
