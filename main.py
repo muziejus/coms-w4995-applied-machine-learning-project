@@ -17,6 +17,7 @@ from expand_financial_data import expand_financial_data
 from eda import eda
 from models.random_forest_classifier import random_forest_classifier
 from models.svm import svm
+from models.lstm import lstm_classifier
 
 companies = ["dltr", "lulu", "ulta", "wba", "wmt"]
 
@@ -81,7 +82,7 @@ def lstm_model():
     if rerun:
         results = []
         for company in companies:
-            cm, accuracy, f1score = lstm(company)
+            cm, accuracy, f1score = lstm_classifier(company)
             results.append((company, cm, accuracy, f1score))
         with open("models/lstm_results.pkl", "wb") as f:
             pickle.dump(results, f)
