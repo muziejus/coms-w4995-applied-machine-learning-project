@@ -11,19 +11,10 @@ feature importance plot.
 from utils.load_data import load_data
 from utils.split_data import split_data
 
-import seaborn as sns
-import matplotlib.pyplot as plt
 import time
 
-from sklearn.linear_model import Lasso
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import RandomForestClassifier
-
-from sklearn import metrics
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import mean_absolute_error
-
+from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.model_selection import GridSearchCV
 
 
@@ -62,14 +53,10 @@ def random_forest_classifier(company):
     tuned_model = model_grid_search.best_estimator_
     y_pred = tuned_model.predict(X_test)
 
-    # [0, 1]
-    class_names = ["Sell", "Buy"]
+    accuracy = accuracy_score(y_test, y_pred)
 
     # Confusion
-    cm = metrics.confusion_matrix(y_test, y_pred)
-    disp = metrics.ConfusionMatrixDisplay(
-        confusion_matrix=cm, display_labels=class_names
-    )
+    cm = confusion_matrix(y_test, y_pred)
 
     # Feature Importance
     feat_imps = zip(
@@ -85,4 +72,4 @@ def random_forest_classifier(company):
         )
     )
 
-    return disp, feats, imps
+    return cm, feats, imps, accuracy
