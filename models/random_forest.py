@@ -4,8 +4,7 @@
 Tuba Opel
 
 This module trains a random forest classifier on each of our target
-companies. It returns the data to make a confusion matrix and a
-feature importance plot.
+companies. It returns the model and various metrics.
 """
 
 from utils.load_data import load_data
@@ -74,5 +73,5 @@ def random_forest_classifier(company):
     #     )
     # )
 
-    return cm, accuracy, f1score
+    return tuned_model, cm, accuracy, f1score
     # return cm, feats, imps, accuracy, f1score

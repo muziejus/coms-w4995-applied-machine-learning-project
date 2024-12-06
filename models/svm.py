@@ -4,8 +4,7 @@
 Vi Mai
 
 This module trains a support vector machine (SVM) on each of our target
-companies. It returns the data to make a confusion matrix and a feature
-importance plot.
+companies. It returns the model and various metrics.
 """
 
 from utils.load_data import load_data
@@ -16,10 +15,11 @@ from sklearn.svm import SVC
 from sklearn.metrics import confusion_matrix, accuracy_score, f1_score
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-import shap
+
+# import shap
 
 
-def svm(company):
+def svm_classifier(company):
     df = load_data(company)
     df = df.dropna()
     X_train, X_test, y_train, y_test = split_data(df)
@@ -53,7 +53,7 @@ def svm(company):
     #     )
     # )
 
-    return cm, accuracy, f1score
+    return analyzer.classifier, cm, accuracy, f1score
 
 
 class SVMAnalyzer:

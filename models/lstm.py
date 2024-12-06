@@ -62,7 +62,7 @@ def lstm_classifier(company):
 
     # Hyper Parameter Tuning
     param_grid = {"epochs": [10, 20], "batch_size": [16, 32]}
-    clf = KerasClassifier(build_fn=create_model, verbose=0, random_state=42)
+    clf = KerasClassifier(model=create_model, verbose=0, random_state=42)
     grid = GridSearchCV(estimator=clf, param_grid=param_grid, n_jobs=-1, cv=5)
 
     grid.fit(X_dev, y_dev)
@@ -75,6 +75,8 @@ def lstm_classifier(company):
     tuned_model = grid.best_estimator_
     y_pred = tuned_model.predict(X_test)
 
+    tuned_model.model_.save("models/lstm.h5")
+
     accuracy = accuracy_score(y_test, y_pred)
 
     f1score = f1_score(y_test, y_pred)
@@ -82,4 +84,4 @@ def lstm_classifier(company):
     # Confusion
     cm = confusion_matrix(y_test, y_pred)
 
-    return cm, accuracy, f1score
+    return "model not saveable. See lstm.h5", cm, accuracy, f1score
