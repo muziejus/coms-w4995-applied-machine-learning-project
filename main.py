@@ -10,10 +10,10 @@ import pickle
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from external_indicators import get_external_indicators
-from share_prices import get_share_prices
-from sentiment import get_daily_sentiment
-from expand_financial_data import expand_financial_data
+from preprocessing.external_indicators import get_external_indicators
+from preprocessing.share_prices import get_share_prices
+from preprocessing.sentiment import get_daily_sentiment
+from preprocessing.expand_financial_data import expand_financial_data
 from eda import eda
 from models.random_forest_classifier import random_forest_classifier
 from models.svm import svm
