@@ -15,9 +15,10 @@ from preprocessing.share_prices import get_share_prices
 from preprocessing.sentiment import get_daily_sentiment
 from preprocessing.expand_financial_data import expand_financial_data
 from eda import eda
-from models.random_forest_classifier import random_forest_classifier
-from models.svm import svm
+from models.random_forest import random_forest_classifier
+from models.svm import svm_classifier
 from models.lstm import lstm_classifier
+from models.xgboost import xgboost_classifier
 
 companies = ["dltr", "lulu", "ulta", "wba", "wmt"]
 
@@ -77,24 +78,35 @@ def print_eda():
     print(eda_df)
 
 
+def rerun_model(company, model_function):
+    model, cm, accuracy, f1score = model_function(company)
+    return {
+        "company": company,
+        "model": model,
+        "cm": cm,
+        "accuracy": accuracy,
+        "f1score": f1score,
+    }
+
+
 # LSTM model
-def lstm_model():
+def lstm():
     if rerun:
+        print("Rerunning LSTM model")
         results = []
         for company in companies:
-            cm, accuracy, f1score = lstm_classifier(company)
-            results.append((company, cm, accuracy, f1score))
+            results.append(rerun_model(company, lstm_classifier))
         with open("models/lstm_results.pkl", "wb") as f:
             pickle.dump(results, f)
 
 
 # SVM Model
-def svm_model():
+def svm():
     if rerun:
+        print("Rerunning SVM model")
         results = []
         for company in companies:
-            cm, accuracy, f1score = svm(company)
-            results.append((company, cm, accuracy, f1score))
+            results.append(rerun_model(company, svm_classifier))
         with open("models/svm_results.pkl", "wb") as f:
             pickle.dump(results, f)
 
@@ -102,16 +114,27 @@ def svm_model():
 # Random Forest model
 def random_forest():
     if rerun:
+        print("Rerunning Random Forest model")
         results = []
         for company in companies:
-            cm, accuracy, f1score = random_forest_classifier(company)
-            results.append((company, cm, accuracy, f1score))
+            results.append(rerun_model(company, random_forest_classifier))
         with open("models/random_forest_results.pkl", "wb") as f:
             pickle.dump(results, f)
     else:
         with open("models/random_forest_results.pkl", "rb") as f:
             results = pickle.load(f)
             print(results[0])
+
+
+# XGBoost model
+def xgboost():
+    if rerun:
+        print("Rerunning XGBoost model")
+        results = []
+        for company in companies:
+            results.append(rerun_model(company, xgboost_classifier))
+        with open("models/xgboost_results.pkl", "wb") as f:
+            pickle.dump(results, f)
 
 
 if __name__ == "__main__":
@@ -127,9 +150,11 @@ if __name__ == "__main__":
         elif argument == "random_forest":
             random_forest()
         elif argument == "svm":
-            svm_model()
+            svm()
         elif argument == "lstm":
-            lstm_model()
+            lstm()
+        elif argument == "xgboost":
+            xgboost()
         else:
             print("Invalid argument. Please use 'collect_data'.")
     else:
