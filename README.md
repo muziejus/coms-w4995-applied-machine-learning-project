@@ -35,6 +35,10 @@ WMT    | Walmart
           analysis data into daily sentiment data for each company.
     - models/ - This folder holds the code for the actual machine learning model 
       training and evaluation.
+    - plots/ - Some plots we made for our final analysis.
+        - confusion_matrices.png - A plot of four confusion matrices,
+          corresponding to the top-performing company for each of our four ML
+          models.
     - data/ - We separated our data into financial data and sentiment data.
         - financial_data/
             - dltr.csv - DLTR historical data.
@@ -91,6 +95,5 @@ We have had difficulty getting the share price code to behave with the Yahoo! Fi
     - `svm` for the SVM model.
     - `xgboost` for the XGBoost model. As with random forest, running this without `rerun` will generate a plot and dataframe listing the more important features in the model.
 
-
-- `svm` executes our SVM analysis.
+4. The `report` argument gives the accuracy and F1 scores for each company’s performance on each model. It then also provides a summary table describing the average performance for each model and the results of the top-performing company. Finally, it draws the confusion matrices for the top performing companies and saves the plot to `plots/confusion_matrices.png`.
 
