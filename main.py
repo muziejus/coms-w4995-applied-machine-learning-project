@@ -14,7 +14,7 @@ from preprocessing.external_indicators import get_external_indicators
 from preprocessing.share_prices import get_share_prices
 from preprocessing.sentiment import get_daily_sentiment
 from preprocessing.expand_financial_data import expand_financial_data
-from eda import eda
+from preprocessing.eda import eda
 from models.random_forest import random_forest_classifier
 from models.svm import svm_classifier
 from models.lstm import lstm_classifier
@@ -127,33 +127,7 @@ def random_forest():
             results = pickle.load(f)
             df = load_data("dltr")  # Load arbitrary dataset to get column names
             df.insert(0, "Index", range(len(df)))  # Add index column
-            columns = df.columns
-            dfs = []
-            for result in results:
-                feat_imps = zip(columns, result["model"].feature_importances_)
-                feat_imp_df = pd.DataFrame(feat_imps, columns=["feature", "importance"])
-                feat_imp_df["company"] = result["company"]
-                feat_imp_df["rank"] = feat_imp_df["importance"].rank(ascending=False)
-                dfs.append(feat_imp_df)
-            feat_imp_df = pd.concat(dfs)
-            avg_feat_imp_df = (
-                feat_imp_df.groupby("feature")["rank"].mean().reset_index()
-            )
-            avg_feat_imp_df = avg_feat_imp_df.sort_values("rank")
-            print(avg_feat_imp_df.head(10))
-            fig, axes = plt.subplots(1, 1, figsize=(10, 10))
-            ax = sns.barplot(data=avg_feat_imp_df, x="rank", y="feature", ax=axes)
-            ax.set_title(
-                "Average Ranks of Feature Importance for Random Forest Classification"
-            )
-            ax.set_xlabel("Average Rank")
-            ax.set_ylabel("Feature")
-            path = "plots/average_rank_feature_importance.png"
-            plt.savefig(
-                path,
-                dpi=300,
-                bbox_inches="tight",
-            )
+            extract_feature_importances(results, df.columns, "Random Forest")
 
 
 # XGBoost model
@@ -165,6 +139,37 @@ def xgboost():
             results.append(rerun_model(company, xgboost_classifier))
         with open("data/model_metadata/xgboost_results.pkl", "wb") as f:
             pickle.dump(results, f)
+    else:
+        with open("data/model_metadata/xgboost_results.pkl", "rb") as f:
+            results = pickle.load(f)
+            df = load_data("dltr")  # Load arbitrary dataset to get column names
+            extract_feature_importances(results, df.columns, "XGBoost")
+
+
+# Extract feature importances.
+def extract_feature_importances(results, columns, technique):
+    dfs = []
+    for result in results:
+        feat_imps = zip(columns, result["model"].feature_importances_)
+        feat_imp_df = pd.DataFrame(feat_imps, columns=["feature", "importance"])
+        feat_imp_df["company"] = result["company"]
+        feat_imp_df["rank"] = feat_imp_df["importance"].rank(ascending=False)
+        dfs.append(feat_imp_df)
+    feat_imp_df = pd.concat(dfs)
+    avg_feat_imp_df = feat_imp_df.groupby("feature")["rank"].mean().reset_index()
+    avg_feat_imp_df = avg_feat_imp_df.sort_values("rank")
+    print(avg_feat_imp_df.head(10))
+    fig, axes = plt.subplots(1, 1, figsize=(10, 10))
+    ax = sns.barplot(data=avg_feat_imp_df, x="rank", y="feature", ax=axes)
+    ax.set_title(f"Average Ranks of Feature Importance for {technique} Classification")
+    ax.set_xlabel("Average Rank")
+    ax.set_ylabel("Feature")
+    path = f"plots/{technique.lower().replace(' ', '_')}_average_rank_feature_importance.png"
+    plt.savefig(
+        path,
+        dpi=300,
+        bbox_inches="tight",
+    )
 
 
 # Compile report on all models

@@ -20,6 +20,9 @@ WMT    | Walmart
       which collect and analyze data. See below for more information.
     - utils/ - This folder holds some utility functions used repeatedly in 
       modules.
+      - load_data.py - Loads the merged data for a specific company.
+      - split_data.py - Splits the data into X and y and does a dev/test split
+        where dev is the first 80% of the data, chronologically.
     - preprocessing/ - This folder holds preprocessing code.
         - external_indicators.py - This module captures our external economic 
           indicators.
@@ -75,9 +78,19 @@ WMT    | Walmart
 
 ## Code Description and Workflow
 
-`main.py` takes a single argument from the command line:
+`main.py` takes up to two arguments from the command line:
 
-- `collect_data` rebuilds the data as available. If there are API issues, it falls back to already existing data files. All subsequent operations read the data anew from disk.
-- `eda` gives a brief description of the data for each company. 
+1. Data collection is done with `python main.py collect_data`. This makes an attempt to redownload the financial and economic data and merges those with the sentiment data. It also zeroes out many of the NaNs in the sentiment data (a function of dropping all weekend news).
+We have had difficulty getting the share price code to behave with the Yahoo! Finance API recently. In short, this step can be skipped.
+
+2. The `eda` argument gives a brief description of the data for each company. 
+
+3. For the individual models, there are two kinds of commands, one with the argument `rerun` as the second argument and the other without. With `rerun`, like `python main.py svm rerun`, the command will retrain and reevaluate the given model. Without does different things but typically nothing. The four model arguments are:
+    - `lstm` for the LSTM model.
+    - `random_forest` for the random forest model. If this is run without `rerun`, it will instead generate a plot and dataframe listing the more important features in the model.
+    - `svm` for the SVM model.
+    - `xgboost` for the XGBoost model. As with random forest, running this without `rerun` will generate a plot and dataframe listing the more important features in the model.
+
+
 - `svm` executes our SVM analysis.
 
