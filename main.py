@@ -193,7 +193,64 @@ def report():
 
     results = lstm_results + svm_results + random_forest_results + xgboost_results
     results_df = pd.DataFrame(results)
-    print(results_df)
+    summary_df = results_df.groupby(["model_name"]).agg(
+        avg_f1score=("f1score", "mean"),
+        avg_accuracy=("accuracy", "mean"),
+        top_company=("f1score", lambda x: results_df.loc[x.idxmax(), "company"]),
+        top_company_f1score=("f1score", "max"),
+        top_company_accuracy=(
+            "f1score",
+            lambda x: results_df.loc[x.idxmax(), "accuracy"],
+        ),
+    )
+
+    print("All Results:\n")
+
+    print(
+        results_df[["model_name", "company", "f1score", "accuracy"]].sort_values(
+            ["model_name", "f1score"], ascending=False
+        )
+    )
+
+    print("\nSummary:\n")
+
+    print(summary_df.sort_values("avg_f1score", ascending=False))
+
+    summary_df["model_name"] = summary_df.index
+    summary_df.reset_index(drop=True, inplace=True)
+
+    fig, axes = plt.subplots(1, 4, figsize=(20, 4))
+
+    for i, row in summary_df.iterrows():
+        model = row["model_name"]
+        company = row["top_company"]
+        cm = results_df.loc[
+            (results_df["model_name"] == model) & (results_df["company"] == company),
+            "cm",
+        ].values[0]
+        ax = sns.heatmap(
+            cm,
+            annot=True,
+            fmt="d",
+            cmap="Blues",
+            xticklabels=["Sell (0)", "Buy (1)"],
+            yticklabels=["Sell (0)", "Buy (1)"],
+            ax=axes[i],
+        )
+        ax.set_xlabel("Predicted Label")
+        ax.set_ylabel("True Label")
+        ax.set_title(
+            f"{model} on {company.upper()} (F1 Score: {row['top_company_f1score']:.2f})"
+        )
+    plt.suptitle(
+        "Confusion Matrices for Top Companies across Four Machine Learning Techniques"
+    )
+    path = "plots/confusion_matrices.png"
+    plt.savefig(
+        path,
+        dpi=300,
+        bbox_inches="tight",
+    )
 
 
 if __name__ == "__main__":

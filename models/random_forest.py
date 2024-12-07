@@ -45,7 +45,7 @@ def random_forest_classifier(company):
     # Evaluate Model
 
     print(f"\n\n{company.upper()} model selection time: {elapsed_time} seconds")
-    print(f"Best F1 score: {model_grid_search.best_score_}")
+    print(f"Best accuracy : {model_grid_search.best_score_}")
     print(f"Best params: {model_grid_search.best_params_}")
     print(f"Test F1 score: {model_grid_search.score(X_test, y_test)}")
 
