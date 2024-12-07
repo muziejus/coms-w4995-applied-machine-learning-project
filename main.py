@@ -98,7 +98,7 @@ def lstm():
         results = []
         for company in companies:
             results.append(rerun_model(company, lstm_classifier))
-        with open("models/lstm_results.pkl", "wb") as f:
+        with open("data/model_metadata/lstm_results.pkl", "wb") as f:
             pickle.dump(results, f)
 
 
@@ -109,7 +109,7 @@ def svm():
         results = []
         for company in companies:
             results.append(rerun_model(company, svm_classifier))
-        with open("models/svm_results.pkl", "wb") as f:
+        with open("data/model_metadata/svm_results.pkl", "wb") as f:
             pickle.dump(results, f)
 
 
@@ -120,10 +120,10 @@ def random_forest():
         results = []
         for company in companies:
             results.append(rerun_model(company, random_forest_classifier))
-        with open("models/random_forest_results.pkl", "wb") as f:
+        with open("data/model_metadata/random_forest_results.pkl", "wb") as f:
             pickle.dump(results, f)
     else:
-        with open("models/random_forest_results.pkl", "rb") as f:
+        with open("data/model_metadata/random_forest_results.pkl", "rb") as f:
             results = pickle.load(f)
             df = load_data("dltr")  # Load arbitrary dataset to get column names
             df.insert(0, "Index", range(len(df)))  # Add index column
@@ -163,25 +163,25 @@ def xgboost():
         results = []
         for company in companies:
             results.append(rerun_model(company, xgboost_classifier))
-        with open("models/xgboost_results.pkl", "wb") as f:
+        with open("data/model_metadata/xgboost_results.pkl", "wb") as f:
             pickle.dump(results, f)
 
 
 # Compile report on all models
 def report():
-    with open("models/lstm_results.pkl", "rb") as f:
+    with open("data/model_metadata/lstm_results.pkl", "rb") as f:
         lstm_results = pickle.load(f)
         for company in lstm_results:
             company["model_name"] = "LSTM"
-    with open("models/svm_results.pkl", "rb") as f:
+    with open("data/model_metadata/svm_results.pkl", "rb") as f:
         svm_results = pickle.load(f)
         for company in svm_results:
             company["model_name"] = "SVM"
-    with open("models/random_forest_results.pkl", "rb") as f:
+    with open("data/model_metadata/random_forest_results.pkl", "rb") as f:
         random_forest_results = pickle.load(f)
         for company in random_forest_results:
             company["model_name"] = "Random Forest"
-    with open("models/xgboost_results.pkl", "rb") as f:
+    with open("data/model_metadata/xgboost_results.pkl", "rb") as f:
         xgboost_results = pickle.load(f)
         for company in xgboost_results:
             company["model_name"] = "XGBoost"
