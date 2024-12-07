@@ -12,7 +12,7 @@ from utils.split_data import split_data
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix, accuracy_score, f1_score
+from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, roc_auc_score
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 
@@ -35,6 +35,11 @@ def svm_classifier(company):
     # Confusion
     cm = confusion_matrix(y_test, y_pred)
 
+    svm_probs = analyzer.classifier.predict_proba(X_test)[
+        :, 1
+    ]  # Probabilities for class 1
+    roc_auc = roc_auc_score(y_test, svm_probs)
+
     # Feature Importance via SHAP
     # background_kmeans = shap.kmeans(X_train, 50)
     # explainer = shap.KernelExplainer(
@@ -53,7 +58,7 @@ def svm_classifier(company):
     #     )
     # )
 
-    return analyzer.classifier, cm, accuracy, f1score
+    return analyzer.classifier, cm, accuracy, f1score, svm_probs, roc_auc
 
 
 class SVMAnalyzer:

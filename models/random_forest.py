@@ -13,7 +13,7 @@ from utils.split_data import split_data
 import time
 
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix, accuracy_score, f1_score
+from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
 
@@ -59,4 +59,7 @@ def random_forest_classifier(company):
     # Confusion
     cm = confusion_matrix(y_test, y_pred)
 
-    return tuned_model, cm, accuracy, f1score
+    random_forest_probs = y_pred.flatten()
+    roc_auc = roc_auc_score(y_test, random_forest_probs)
+
+    return tuned_model, cm, accuracy, f1score, random_forest_probs, roc_auc

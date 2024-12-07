@@ -13,7 +13,7 @@ from utils.split_data import split_data
 import numpy as np
 
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import confusion_matrix, accuracy_score, f1_score
+from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
 from keras.models import Sequential
@@ -84,4 +84,7 @@ def lstm_classifier(company):
     # Confusion
     cm = confusion_matrix(y_test, y_pred)
 
-    return "model not saveable. See lstm.h5", cm, accuracy, f1score
+    lstm_probs = y_pred.flatten()
+    roc_auc = roc_auc_score(y_test, lstm_probs)
+
+    return "model not saveable. See lstm.h5", cm, accuracy, f1score, lstm_probs, roc_auc
