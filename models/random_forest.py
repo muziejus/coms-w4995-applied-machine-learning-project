@@ -59,19 +59,4 @@ def random_forest_classifier(company):
     # Confusion
     cm = confusion_matrix(y_test, y_pred)
 
-    # Feature Importance
-    # feat_imps = zip(
-    #     X_dev.columns, model_grid_search.best_estimator_.feature_importances_
-    # )
-    # feats, imps = zip(
-    #     *(
-    #         sorted(
-    #             list(filter(lambda x: x[1] != 0, feat_imps)),
-    #             key=lambda x: x[1],
-    #             reverse=True,
-    #         )
-    #     )
-    # )
-
     return tuned_model, cm, accuracy, f1score
-    # return cm, feats, imps, accuracy, f1score
