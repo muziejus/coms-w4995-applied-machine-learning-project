@@ -75,7 +75,7 @@ def lstm_classifier(company):
     tuned_model = grid.best_estimator_
     y_pred = tuned_model.predict(X_test)
 
-    tuned_model.model_.save("models/lstm.h5")
+    tuned_model.model_.save("data/model_metadata/lstm.h5")
 
     accuracy = accuracy_score(y_test, y_pred)
 
