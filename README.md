@@ -39,6 +39,13 @@ WMT    | Walmart
         - confusion_matrices.png - A plot of four confusion matrices,
           corresponding to the top-performing company for each of our four ML
           models.
+        - average_permutation_importances.png - A plot of the top ten average 
+          important features per model.
+        - roc_curves.png - A plot of the ROC curves for each company and model.
+    - analyses/ - A few functions for generating reports.
+        - permutation_importance.py - Contains the code for plotting permutation 
+          importance.
+        - roc_curve.py - Contains the code for plotting ROC curves.
     - data/ - We separated our data into financial data and sentiment data.
         - financial_data/
             - dltr.csv - DLTR historical data.
@@ -97,3 +104,8 @@ We have had difficulty getting the share price code to behave with the Yahoo! Fi
 
 4. The `report` argument gives the accuracy and F1 scores for each company’s performance on each model. It then also provides a summary table describing the average performance for each model and the results of the top-performing company. Finally, it draws the confusion matrices for the top performing companies and saves the plot to `plots/confusion_matrices.png`.
 
+5. The `perm_imp` argument creates the plot in `plots/average_permutation_importance.png`, which gives the top ten average important features for each model.
+
+6. The `roc` argument creates the plot in `plots/roc_curves.png`, which plots a ROC curve for each company and each model.
+
+7. The `run_all` argument reruns all the models and generates all the plots anew. It skips EDA and gathering the data.

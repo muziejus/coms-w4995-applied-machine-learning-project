@@ -19,6 +19,8 @@ from models.random_forest import random_forest_classifier
 from models.svm import svm_classifier
 from models.lstm import lstm_classifier
 from models.xgboost import xgboost_classifier
+from analyses.permutation_importance import permutation_importance
+from analyses.roc_curve import plot_roc_curves
 
 from utils.load_data import load_data
 
@@ -93,6 +95,7 @@ def rerun_model(company, model_function):
         "probs": probs,
         "roc_auc": roc_auc,
         "y_test": y_test,  # surprisingly, y_test varies slightly between
+        "perm_imp_df": perm_imp_df,
         # models based on NaN handling.
     }
 
@@ -178,8 +181,7 @@ def extract_feature_importances(results, columns, technique):
     )
 
 
-# Compile report on all models
-def report():
+def extract_results():
     with open("data/model_metadata/lstm_results.pkl", "rb") as f:
         lstm_results = pickle.load(f)
         for company in lstm_results:
@@ -198,7 +200,12 @@ def report():
             company["model_name"] = "XGBoost"
 
     results = lstm_results + svm_results + random_forest_results + xgboost_results
-    results_df = pd.DataFrame(results)
+    return pd.DataFrame(results)
+
+
+# Compile report on all models
+def report():
+    results_df = extract_results()
     summary_df = results_df.groupby(["model_name"]).agg(
         avg_f1score=("f1score", "mean"),
         avg_accuracy=("accuracy", "mean"),
@@ -259,6 +266,39 @@ def report():
     )
 
 
+def permutation_importance_report():
+    results_df = extract_results()
+    permutation_importance(results_df)
+
+
+def roc_analysis():
+    results_df = extract_results()
+    plot_roc_curves(results_df, companies)
+
+
+# def create_roc_curves(results):
+#     fig, axes = plt.subplots(1, 4, figsize=(20, 4))
+#     for i, result in enumerate(results):
+#         company = result["company"]
+#         roc_auc = result["roc_auc"]
+#         fpr, tpr, _ = roc_curve()
+#         ax = axes[i]
+#         ax.plot(fpr, tpr, color="darkorange", lw=2)
+#         ax.plot([0, 1], [0, 1], color="navy", lw=2, linestyle="--")
+#         ax.set_xlim([0.0, 1.0])
+#         ax.set_ylim([0.0, 1.05])
+#         ax.set_xlabel("False Positive Rate")
+#         ax.set_ylabel("True Positive Rate")
+#         ax.set_title(f"ROC Curve for {company.upper()} (AUC = {roc_auc[2]:.2f})")
+#     plt.suptitle("ROC Curves for Top Companies across Four Machine Learning Techniques")
+#     path = "plots/roc_curves.png"
+#     plt.savefig(
+#         path,
+#         dpi=300,
+#         bbox_inches="tight",
+#     )
+
+
 if __name__ == "__main__":
     # Check if an argument is passed
     if len(sys.argv) > 2 and sys.argv[2] == "rerun":
@@ -279,7 +319,20 @@ if __name__ == "__main__":
             xgboost()
         elif argument == "report":
             report()
+        elif argument == "perm_imp":
+            permutation_importance_report()
+        elif argument == "roc":
+            roc_analysis()
+        elif argument == "run_all":
+            rerun = True
+            random_forest()
+            svm()
+            lstm()
+            xgboost()
+            report()
+            permutation_importance_report()
+            roc_analysis()
         else:
-            print("Invalid argument. Please use 'collect_data'.")
+            print("Invalid argument. See README for available arguments.")
     else:
-        print("No argument provided. Please use 'collect_data'.")
+        print("No argument provided. See README for available arguments.")
