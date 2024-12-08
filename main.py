@@ -81,7 +81,7 @@ def print_eda():
 
 
 def rerun_model(company, model_function):
-    model, cm, accuracy, f1score, probs, roc_auc = model_function(company)
+    model, cm, accuracy, f1score, probs, roc_auc, y_test = model_function(company)
     return {
         "company": company,
         "model": model,
@@ -90,6 +90,8 @@ def rerun_model(company, model_function):
         "f1score": f1score,
         "probs": probs,
         "roc_auc": roc_auc,
+        "y_test": y_test,  # surprisingly, y_test varies slightly between
+        # models based on NaN handling.
     }
 
 

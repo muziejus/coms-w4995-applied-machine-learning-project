@@ -58,7 +58,7 @@ def svm_classifier(company):
     #     )
     # )
 
-    return analyzer.classifier, cm, accuracy, f1score, svm_probs, roc_auc
+    return analyzer.classifier, cm, accuracy, f1score, svm_probs, roc_auc, y_test
 
 
 class SVMAnalyzer:

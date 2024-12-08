@@ -62,4 +62,4 @@ def random_forest_classifier(company):
     random_forest_probs = y_pred.flatten()
     roc_auc = roc_auc_score(y_test, random_forest_probs)
 
-    return tuned_model, cm, accuracy, f1score, random_forest_probs, roc_auc
+    return tuned_model, cm, accuracy, f1score, random_forest_probs, roc_auc, y_test

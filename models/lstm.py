@@ -87,4 +87,12 @@ def lstm_classifier(company):
     lstm_probs = y_pred.flatten()
     roc_auc = roc_auc_score(y_test, lstm_probs)
 
-    return "model not saveable. See lstm.h5", cm, accuracy, f1score, lstm_probs, roc_auc
+    return (
+        "model not saveable. See lstm.h5",
+        cm,
+        accuracy,
+        f1score,
+        lstm_probs,
+        roc_auc,
+        y_test,
+    )

@@ -38,7 +38,7 @@ def xgboost_classifier(company):
     ]  # Probabilities for class 1
     roc_auc = roc_auc_score(y_test, xgboost_probs)
 
-    return analyzer.classifier, cm, accuracy, f1score, xgboost_probs, roc_auc
+    return analyzer.classifier, cm, accuracy, f1score, xgboost_probs, roc_auc, y_test
 
 
 class XGBoostAnalyzer:
