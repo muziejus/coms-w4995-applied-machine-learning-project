@@ -8,6 +8,7 @@ companies. It returns the model and various metrics.
 """
 
 from utils.load_data import load_data
+from utils.permutation_importance import permutation_importance
 from utils.split_data import split_data
 
 from sklearn.preprocessing import StandardScaler
@@ -40,25 +41,18 @@ def svm_classifier(company):
     ]  # Probabilities for class 1
     roc_auc = roc_auc_score(y_test, svm_probs)
 
-    # Feature Importance via SHAP
-    # background_kmeans = shap.kmeans(X_train, 50)
-    # explainer = shap.KernelExplainer(
-    #     analyzer.classifier.predict_log_proba, background_kmeans
-    # )
-    # shap_values = explainer.shap_values(X_test)
-    # shap_mean_importance = abs(shap_values[1]).mean(
-    #     axis=0
-    # )  # For class 1 (binary classification)
-    # shap_feat_imps = zip(X_test.columns, shap_mean_importance)
-    # feats, imps = zip(
-    #     *sorted(
-    #         ((f, imp) for f, imp in shap_feat_imps if imp != 0),
-    #         key=lambda x: x[1],
-    #         reverse=True,
-    #     )
-    # )
+    perm_imp_df = permutation_importance(analyzer.pipeline, X_test, y_test)
 
-    return analyzer.classifier, cm, accuracy, f1score, svm_probs, roc_auc, y_test
+    return (
+        analyzer.classifier,
+        cm,
+        accuracy,
+        f1score,
+        svm_probs,
+        roc_auc,
+        y_test,
+        perm_imp_df,
+    )
 
 
 class SVMAnalyzer:

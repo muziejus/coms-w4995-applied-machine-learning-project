@@ -8,9 +8,12 @@ It returns the data to make a confusion matrix.
 """
 
 from utils.load_data import load_data
+from utils.permutation_importance import permutation_importance
 from utils.split_data import split_data
 
+import pandas as pd
 import numpy as np
+import shap
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, roc_auc_score
@@ -38,6 +41,8 @@ def lstm_classifier(company):
 
     # Label Target
     y = df["target"]
+
+    columns = X.columns
 
     # Reshape data for LSTM input (samples, timesteps, features)
     timesteps = 30  # Number of timesteps to look back
@@ -87,6 +92,17 @@ def lstm_classifier(company):
     lstm_probs = y_pred.flatten()
     roc_auc = roc_auc_score(y_test, lstm_probs)
 
+    keras_model = tuned_model.model_
+    explainer = shap.GradientExplainer(keras_model, X_dev)
+    shap_values = explainer.shap_values(X_test)
+
+    # Calculate the average absolute SHAP value for each feature
+    shap_mean = np.mean(np.abs(shap_values[0]), axis=0)  # For the first class output
+    # Create a dataframe to hold the feature importances
+    perm_imp_df = pd.DataFrame(
+        {"Feature": columns, "Importance": shap_mean.flatten()}
+    ).sort_values(by="Importance", ascending=False)
+
     return (
         "model not saveable. See lstm.h5",
         cm,
@@ -95,4 +111,5 @@ def lstm_classifier(company):
         lstm_probs,
         roc_auc,
         y_test,
+        perm_imp_df,
     )

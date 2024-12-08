@@ -8,6 +8,7 @@ companies. It returns the model and various metrics.
 """
 
 from utils.load_data import load_data
+from utils.permutation_importance import permutation_importance
 from utils.split_data import split_data
 
 import time
@@ -62,4 +63,15 @@ def random_forest_classifier(company):
     random_forest_probs = y_pred.flatten()
     roc_auc = roc_auc_score(y_test, random_forest_probs)
 
-    return tuned_model, cm, accuracy, f1score, random_forest_probs, roc_auc, y_test
+    perm_imp_df = permutation_importance(tuned_model, X_test, y_test)
+
+    return (
+        tuned_model,
+        cm,
+        accuracy,
+        f1score,
+        random_forest_probs,
+        roc_auc,
+        y_test,
+        perm_imp_df,
+    )

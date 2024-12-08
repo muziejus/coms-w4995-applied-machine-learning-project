@@ -8,6 +8,7 @@ It returns the model and various metrics.
 """
 
 from utils.load_data import load_data
+from utils.permutation_importance import permutation_importance
 from utils.split_data import split_data
 
 from sklearn.preprocessing import StandardScaler
@@ -38,7 +39,18 @@ def xgboost_classifier(company):
     ]  # Probabilities for class 1
     roc_auc = roc_auc_score(y_test, xgboost_probs)
 
-    return analyzer.classifier, cm, accuracy, f1score, xgboost_probs, roc_auc, y_test
+    perm_imp_df = permutation_importance(analyzer.pipeline, X_test, y_test)
+
+    return (
+        analyzer.classifier,
+        cm,
+        accuracy,
+        f1score,
+        xgboost_probs,
+        roc_auc,
+        y_test,
+        perm_imp_df,
+    )
 
 
 class XGBoostAnalyzer:

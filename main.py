@@ -81,7 +81,9 @@ def print_eda():
 
 
 def rerun_model(company, model_function):
-    model, cm, accuracy, f1score, probs, roc_auc, y_test = model_function(company)
+    model, cm, accuracy, f1score, probs, roc_auc, y_test, perm_imp_df = model_function(
+        company
+    )
     return {
         "company": company,
         "model": model,
